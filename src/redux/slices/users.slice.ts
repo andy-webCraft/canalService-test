@@ -13,7 +13,11 @@ const initialState: UsersState = { users: [] };
 const usersReducer = createSlice({
   name: "usersReducer",
   initialState,
-  reducers: {},
+  reducers: {
+    setUsers: (state, action: PayloadAction<Array<IUser> | []>) => {
+      state.users = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(
       getUsersData.fulfilled,
@@ -32,11 +36,9 @@ export const getUsersData = createAsyncThunk<Array<IUser>>(
     try {
       const result = await getUsersArrAsync().then((users) => {
         const dataPromisesArr = users.map(async (user) => {
-          return {
-            ...user,
-            photo: await getUserPhotoAsync(user.id),
-            post: await getUserPostAsync(user.id),
-          };
+          user.photo = await getUserPhotoAsync(user.id);
+          user.post = await getUserPostAsync(user.id);
+          return user;
         });
 
         return Promise.all(dataPromisesArr);
@@ -85,6 +87,7 @@ export const getUserPostAsync = async (id: number) => {
   });
 };
 
+export const { setUsers } = usersReducer.actions;
 export const usersSelector = (state: RootState) => state.usersReducer;
 
 export default usersReducer.reducer;

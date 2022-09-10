@@ -11,6 +11,7 @@ import decktopLogo from "../../assets/img/desktop-logo.png";
 import mobileLogo from "../../assets/img/mobile-logo.png";
 import logOutIcon from "../../assets/img/logout-btn.svg";
 import { breakPoints, secondTitleStyle } from "../../styles/styles";
+import { setUsers } from "../../redux/slices/users.slice";
 
 const HeaderStyled = styled.header`
   width: 100%;
@@ -54,6 +55,7 @@ const Header = () => {
   const logOutHandler = () => {
     dispatch(isLoginToggle(false));
     dispatch(setUserName(null));
+    dispatch(setUsers([]));
   };
 
   return (
