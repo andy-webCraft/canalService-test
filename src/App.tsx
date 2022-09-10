@@ -1,58 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
+import styled from "styled-components";
+import Header from "./components/Header/Header";
+import { useAppDispatch, useIsMobile } from "./hooks/hooks";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import PostsPage from "./pages/PostsPage/PostsPage";
+import { isMobileToggle } from "./redux/slices/app.slice";
+import { breakPoints } from "./styles/styles";
 
-function App() {
+const AppWrapper = styled.div`
+  overflow-x: hidden;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  padding-top: 118px;
+  @media (max-width: ${breakPoints.sm}) {
+    padding: 118px 15px 15px;
+  }
+`;
+
+const App = () => {
+  const checkMobileDevice = useIsMobile();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(isMobileToggle(checkMobileDevice));
+  }, [checkMobileDevice]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <AppWrapper>
+      <Header />
+
+      <Container>
+        <Routes>
+          <Route path="/" element={<PostsPage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </Container>
+    </AppWrapper>
   );
-}
+};
 
 export default App;
